@@ -21,8 +21,15 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest playwright pytest-playwright
+          pip install pytest playwright pytest-playwright pytest-html
           playwright install --with-deps
 
-      - name: Run tests
-        run: pytest
+      - name: Run tests and generate HTML report
+        run: |
+          pytest --html=report.html --self-contained-html || true
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-report
+          path: report.html
